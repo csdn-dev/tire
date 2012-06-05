@@ -1,6 +1,10 @@
 module Tire
 
   class Configuration
+    
+    def self.nodes_count(n=2)
+      @nodes_count ||= n
+    end
 
     def self.url(value=nil)
       @url = (value ? value.to_s.gsub(%r|/*$|, '') : nil) || @url || ENV['ELASTICSEARCH_URL'] || "http://localhost:9200"
