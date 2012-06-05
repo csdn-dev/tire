@@ -67,7 +67,7 @@ module Tire
 
     def mapping(type)
       @response = Configuration.client.get("#{url}/#{type}/_mapping")
-      MultiJson.decode(@response.body)[@name]
+      MultiJson.decode(@response.body)
     end
 
     def create_mapping(type, options)

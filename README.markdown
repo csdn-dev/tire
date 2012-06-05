@@ -52,7 +52,7 @@ curl -X DELETE http://192.168.6.35:9400/index_name
 
 ```
 
-创建Mapping
+创建Mapping:
 
 ```
 [1] pry(main)> options_str = '{"csdn" : {
@@ -100,4 +100,29 @@ curl -X PUT http://192.168.6.35:9400/index_name/csdn/_mapping -d '{"csdn":{"_sou
 # 2012-06-05 17:36:06:237 [200]
 
 => true
+```
+
+查看Mapping:
+
+```
+[1] pry(main)> index = Tire.index("index_name")
+=> #<Tire::Index:0x89f22cc @name="index_name">
+[2] pry(main)> index.mapping
+index.mapping
+[2] pry(main)> index.mapping("csdn")
+=> {"csdn"=>
+  {"_source"=>{"enabled"=>false},
+   "properties"=>
+    {"title"=>
+      {"type"=>"string",
+       "term_vector"=>"with_positions_offsets",
+       "boost"=>2.0},
+     "body"=>{"type"=>"string", "term_vector"=>"with_positions_offsets"},
+     "username"=>{"type"=>"string", "index"=>"not_analyzed", "store"=>"no"},
+     "id"=>
+      {"type"=>"integer", "index"=>"not_analyzed", "include_in_all"=>false},
+     "created_at"=>
+      {"type"=>"integer", "index"=>"not_analyzed", "include_in_all"=>false}}}}
+[3] pry(main)>
+
 ```
