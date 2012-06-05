@@ -56,47 +56,6 @@ module Tire
         assert_nothing_raised { assert ! @index.delete }
       end
 
-      should "add an index alias" do
-        Configuration.client.expects(:post).with do |url, payload|
-          url =~ /_aliases/ &&
-          MultiJson.decode(payload)['actions'][0]['add'] == {'index' => 'dummy', 'alias' => 'foo'}
-        end.returns(mock_response('{"ok":true}'))
-
-        @index.add_alias 'foo'
-      end
-
-      should "add an index alias with configuration" do
-        Configuration.client.expects(:post).with do |url, payload|
-          url =~ /_aliases/ &&
-          MultiJson.decode(payload)['actions'][0]['add'] == {'index' => 'dummy', 'alias' => 'foo', 'routing' => 1 }
-        end.returns(mock_response('{"ok":true}'))
-
-        @index.add_alias 'foo', :routing => 1
-      end
-
-      should "delete an index alias" do
-        Configuration.client.expects(:get).returns(mock_response({'dummy' => {'aliases' => {'foo' => {}}}}.to_json))
-        Configuration.client.expects(:post).with do |url, payload|
-          url =~ /_aliases/ &&
-          MultiJson.decode(payload)['actions'][0]['remove'] == {'index' => 'dummy', 'alias' => 'foo'}
-        end.returns(mock_response('{"ok":true}'))
-
-        @index.remove_alias 'foo'
-      end
-
-      should "list aliases for an index" do
-        json = {'dummy' => {'aliases' => {'foo' => {}}}}.to_json
-        Configuration.client.expects(:get).returns(mock_response(json))
-
-        assert_equal ['foo'], @index.aliases.map(&:name)
-      end
-
-      should "return properties of an alias" do
-        json = {'dummy' => { 'aliases' => {'foo' => { 'filter' => { 'term' => { 'user' => 'john' } }}} }}.to_json
-        Configuration.client.expects(:get).returns(mock_response(json))
-
-        assert_equal( { 'term' => {'user' => 'john'} }, @index.aliases('foo').filter )
-      end
 
       should "refresh the index" do
         Configuration.client.expects(:post).returns(mock_response('{"ok":true,"_shards":{}}'))

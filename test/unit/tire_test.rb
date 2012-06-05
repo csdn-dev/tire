@@ -90,20 +90,6 @@ module Tire
 
       end
 
-      context "aliases" do
-
-        should "list all aliases" do
-          json = {'dummy' => {'aliases' => {'foo' => {}}}}.to_json
-          Configuration.client.expects(:get).returns(mock_response(json))
-
-          aliases = Tire.aliases
-
-          assert_equal 'foo',     aliases.first.name
-          assert_equal ['dummy'], aliases.first.indices.to_a
-        end
-
-      end
-
       context "utils" do
 
         should "encode a string for URL" do

@@ -24,7 +24,6 @@ require 'tire/results/pagination'
 require 'tire/results/collection'
 require 'tire/results/item'
 require 'tire/index'
-require 'tire/alias'
 require 'tire/dsl'
 require 'tire/tasks'
 

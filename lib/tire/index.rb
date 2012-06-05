@@ -32,6 +32,7 @@ module Tire
       logged('_regist_shard', curl)
     end
 
+    # TODO wrap results
     def shard_info
       @response = Configuration.client.get("#{url}/_shard")
       if @response.failure?
@@ -62,18 +63,6 @@ module Tire
     ensure
       curl = %Q|curl -X POST #{url} -d '#{MultiJson.encode(options)}'|
       logged('CREATE', curl)
-    end
-
-    def add_alias(alias_name, configuration={})
-      Alias.create(configuration.merge( :name => alias_name, :index => @name ) )
-    end
-
-    def remove_alias(alias_name)
-      Alias.find(alias_name) { |a| a.indices.delete @name }.save
-    end
-
-    def aliases(alias_name=nil)
-      alias_name ? Alias.all(@name).select { |a| a.name == alias_name }.first : Alias.all(@name)
     end
 
     def mapping
