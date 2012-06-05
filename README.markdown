@@ -37,3 +37,17 @@ curl -X GET http://192.168.6.35:9400/index_name
  {"host"=>"127.0.0.1:9500", "index"=>"index_name", "shardId"=>5}]
 
 ```
+
+删除索引(后端未实现)：
+
+```
+[5] pry(main)> index.delete
+# 2012-06-05 17:07:02:158 [DELETE] ("index_name")
+#
+curl -X DELETE http://192.168.6.35:9400/index_name
+
+# 2012-06-05 17:07:02:158 [200]
+
+=> true
+
+```
