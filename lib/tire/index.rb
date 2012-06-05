@@ -38,9 +38,8 @@ module Tire
         STDERR.puts "[REQUEST FAILED] \n"
         raise @response.to_s
       end
-      @json     = MultiJson.decode(@response.body)
-      Results::Collection.new(@json)
-       
+      
+      MultiJson.decode(@response.body)
     ensure
       curl = %Q|curl -X GET #{url}|
       logged('_regist_shard_info', curl)
