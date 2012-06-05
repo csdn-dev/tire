@@ -65,9 +65,19 @@ module Tire
       logged('CREATE', curl)
     end
 
-    def mapping
-      @response = Configuration.client.get("#{url}/_mapping")
+    def mapping(type)
+      @response = Configuration.client.get("#{url}/#{type}/_mapping")
       MultiJson.decode(@response.body)[@name]
+    end
+
+    def create_mapping(type, options)
+      @options = options
+      @response = Configuration.client.put("#{url}/#{type}/_mapping", MultiJson.encode(options))
+      @response.success?
+
+    ensure
+      curl = %Q|curl -X PUT #{url}/#{type}/_mapping -d '#{MultiJson.encode(options)}'|
+      logged('CREATE MAPPING', curl)
     end
 
     def settings

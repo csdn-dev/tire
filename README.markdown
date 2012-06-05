@@ -51,3 +51,53 @@ curl -X DELETE http://192.168.6.35:9400/index_name
 => true
 
 ```
+
+创建Mapping
+
+```
+[1] pry(main)> options_str = '{"csdn" : {
+[1] pry(main)*          "_source" : { "enabled" : false },
+[1] pry(main)*          "properties" : {
+[1] pry(main)*              "title":           {"type" : "string","term_vector":"with_positions_offsets","boost":2.0},
+[1] pry(main)*              "body":            {"type" : "string","term_vector":"with_positions_offsets"},
+[1] pry(main)*              "username":        {"type" : "string","index":"not_analyzed","store":"no"},
+[1] pry(main)*              "id" :             {"type" : "integer","index":"not_analyzed","include_in_all":false},
+[1] pry(main)*              "created_at" :     {"type" : "integer","index":"not_analyzed","include_in_all":false}
+[1] pry(main)*          }}}'
+=> "{\"csdn\" : {\n         \"_source\" : { \"enabled\" : false },\n         \"properties\" : {\n             \"title\":           {\"type\" : \"string\",\"term_vector\":\"with_positions_offsets\",\"boost\":2.0},\n             \"body\":            {\"type\" : \"string\",\"term_vector\":\"with_positions_offsets\"},\n             \"username\":        {\"type\" : \"string\",\"index\":\"not_analyzed\",\"store\":\"no\"},\n             \"id\" :             {\"type\" : \"integer\",\"index\":\"not_analyzed\",\"include_in_all\":false},\n             \"created_at\" :     {\"type\" : \"integer\",\"index\":\"not_analyzed\",\"include_in_all\":false}\n         }}}"
+[2] pry(main)> options_json = '{"csdn" : {
+[2] pry(main)*          "_source" : { "enabled" : false },
+[2] pry(main)*          "properties" : {
+[2] pry(main)*              "title":           {"type" : "string","term_vector":"with_positions_offsets","boost":2.0},
+[2] pry(main)*              "body":            {"type" : "string","term_vector":"with_positions_offsets"},
+[2] pry(main)*              "username":        {"type" : "string","index":"not_analyzed","store":"no"},
+[2] pry(main)*              "id" :             {"type" : "integer","index":"not_analyzed","include_in_all":false},
+[2] pry(main)*              "created_at" :     {"type" : "integer","index":"not_analyzed","include_in_all":false}
+[2] pry(main)*          }}}'
+=> "{\"csdn\" : {\n         \"_source\" : { \"enabled\" : false },\n         \"properties\" : {\n             \"title\":           {\"type\" : \"string\",\"term_vector\":\"with_positions_offsets\",\"boost\":2.0},\n             \"body\":            {\"type\" : \"string\",\"term_vector\":\"with_positions_offsets\"},\n             \"username\":        {\"type\" : \"string\",\"index\":\"not_analyzed\",\"store\":\"no\"},\n             \"id\" :             {\"type\" : \"integer\",\"index\":\"not_analyzed\",\"include_in_all\":false},\n             \"created_at\" :     {\"type\" : \"integer\",\"index\":\"not_analyzed\",\"include_in_all\":false}\n         }}}"
+[3] pry(main)> options_hash = JSON.parse options_json
+=> {"csdn"=>
+  {"_source"=>{"enabled"=>false},
+   "properties"=>
+    {"title"=>
+      {"type"=>"string",
+       "term_vector"=>"with_positions_offsets",
+       "boost"=>2.0},
+     "body"=>{"type"=>"string", "term_vector"=>"with_positions_offsets"},
+     "username"=>{"type"=>"string", "index"=>"not_analyzed", "store"=>"no"},
+     "id"=>
+      {"type"=>"integer", "index"=>"not_analyzed", "include_in_all"=>false},
+     "created_at"=>
+      {"type"=>"integer", "index"=>"not_analyzed", "include_in_all"=>false}}}}
+
+[5] pry(main)> index = Tire.index("index_name")
+=> #<Tire::Index:0xab7799c @name="index_name">
+[7] pry(main)> index.create_mapping("csdn", options_hash)
+# 2012-06-05 17:36:06:237 [CREATE MAPPING] ("index_name")
+#
+curl -X PUT http://192.168.6.35:9400/index_name/csdn/_mapping -d '{"csdn":{"_source":{"enabled":false},"properties":{"title":{"type":"string","term_vector":"with_positions_offsets","boost":2.0},"body":{"type":"string","term_vector":"with_positions_offsets"},"username":{"type":"string","index":"not_analyzed","store":"no"},"id":{"type":"integer","index":"not_analyzed","include_in_all":false},"created_at":{"type":"integer","index":"not_analyzed","include_in_all":false}}}}'
+
+# 2012-06-05 17:36:06:237 [200]
+
+=> true
+```
