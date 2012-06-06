@@ -90,69 +90,27 @@ module Tire
       logged('BULK', curl)
     end
 
+    def flush
+      @response = Configuration.client.put("#{url}/_flush", {})
+      @response.success?
+
+    ensure
+      curl = %Q|curl -X PUT #{url}/_flush|
+      logged('FLUSH', curl)
+    end
+
+    def refresh
+      @response = Configuration.client.put("#{url}/_refresh", {})
+      @response.success?
+
+    ensure
+      curl = %Q|curl -X PUT #{url}/_flush|
+      logged('FLUSH', curl)
+    end
+
     def settings
       @response = Configuration.client.get("#{url}/_settings")
       MultiJson.decode(@response.body)[@name]['settings']
-    end
-
-    def store(*args)
-      document, options = args
-      type = get_type_from_document(document)
-
-      if options
-        percolate = options[:percolate]
-        percolate = "*" if percolate === true
-      end
-
-      id       = get_id_from_document(document)
-      document = convert_document_to_json(document)
-
-      url  = id ? "#{self.url}/#{type}/#{id}" : "#{self.url}/#{type}/"
-      url += "?percolate=#{percolate}" if percolate
-
-      @response = Configuration.client.post url, document
-      MultiJson.decode(@response.body)
-
-    ensure
-      curl = %Q|curl -X POST "#{url}" -d '#{document}'|
-      logged([type, id].join('/'), curl)
-    end
-
-    def bulk_store(documents, options={})
-      payload = documents.map do |document|
-        type = get_type_from_document(document, :escape => false) # Do not URL-escape the _type
-        id   = get_id_from_document(document)
-
-        STDERR.puts "[ERROR] Document #{document.inspect} does not have ID" unless id
-
-        output = []
-        output << %Q|{"index":{"_index":"#{@name}","_type":"#{type}","_id":"#{id}"}}|
-        output << convert_document_to_json(document)
-        output.join("\n")
-      end
-      payload << ""
-
-      tries = 5
-      count = 0
-
-      begin
-        response = Configuration.client.post("#{url}/_bulk", payload.join("\n"))
-        raise RuntimeError, "#{response.code} > #{response.body}" if response.failure?
-        response
-      rescue StandardError => error
-        if count < tries
-          count += 1
-          STDERR.puts "[ERROR] #{error.message}, retrying (#{count})..."
-          retry
-        else
-          STDERR.puts "[ERROR] Too many exceptions occured, giving up. The HTTP response was: #{error.message}"
-          raise if options[:raise]
-        end
-
-      ensure
-        curl = %Q|curl -X POST "#{url}/_bulk" -d '{... data omitted ...}'|
-        logged('BULK', curl)
-      end
     end
 
     def import(klass_or_collection, options={})

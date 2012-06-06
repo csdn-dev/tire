@@ -5,7 +5,7 @@ Ruby client for ElasticSearch.
 Usage
 -----
 
-注册分片：
+注册分片：index.regist_shard(total)
 ```
 [1] pry(main)> index = Tire.index("index_name")
 => #<Tire::Index:0x9cd1564 @name="index_name">
@@ -20,7 +20,7 @@ curl -X PUT "http://192.168.6.35:9400/index_name/_shard" -d '{"cs1":[0,2,4],"cs2
 [3] pry(main)> 
 ```
 
-查看分片信息：
+查看分片信息：index.shard_info
 ```
 [2] pry(main)> index.shard_info
 # 2012-06-05 16:25:40:748 [_regist_shard_info] ("index_name")
@@ -38,7 +38,7 @@ curl -X GET http://192.168.6.35:9400/index_name
 
 ```
 
-删除索引(后端未实现)：
+删除索引(后端未实现)：index.delete
 
 ```
 [5] pry(main)> index.delete
@@ -52,7 +52,7 @@ curl -X DELETE http://192.168.6.35:9400/index_name
 
 ```
 
-创建Mapping:
+创建Mapping:index.create_mapping(type, options)
 
 ```
 [4] pry(main)> mapping = {"csdn"=>
@@ -91,7 +91,7 @@ curl -X PUT http://192.168.6.35:9400/index_name/csdn/_mapping -d '{"csdn":{"_sou
 => true
 ```
 
-查看Mapping:
+查看Mapping:index.mapping(type)
 
 ```
 [1] pry(main)> index = Tire.index("index_name")
@@ -116,7 +116,7 @@ index.mapping
 
 ```
 
-批量提交索引数据：
+批量提交索引数据：index.bulk(type, doc)
 
 ```
 [14] pry(main)> doc = <<-EOF
@@ -195,4 +195,33 @@ curl -X PUT http://192.168.6.35:9400/index_name/csdn/_pulk -d '[{"title":"java �
 # 2012-06-06 13:35:54:133 [200]
 
 => true
+```
+
+持久化索引：index.flush
+
+```
+[1] pry(main)> index = Tire.index("index_name")
+=> #<Tire::Index:0xa32a294 @name="index_name">
+[2] pry(main)> index.flush
+# 2012-06-06 14:09:10:527 [FLUSH] ("index_name")
+#
+curl -X PUT http://192.168.6.35:9400/index_name/_flush
+
+# 2012-06-06 14:09:10:527 [200]
+
+=> true
+```
+
+刷新索引：index.refresh
+
+```
+index.refresh
+# 2012-06-06 14:10:13:356 [_refresh] ("index_name")
+#
+curl -X POST "http://192.168.6.35:9400/index_name/_refresh"
+
+# 2012-06-06 14:10:13:356 [200]
+
+=> 200 : {"ok":true,"acknowledged":true}
+
 ```
