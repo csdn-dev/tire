@@ -200,14 +200,12 @@ curl -X PUT http://192.168.6.35:9400/index_name/csdn/_pulk -d '[{"title":"java �
 持久化索引：index.flush
 
 ```
-[1] pry(main)> index = Tire.index("index_name")
-=> #<Tire::Index:0xa32a294 @name="index_name">
 [2] pry(main)> index.flush
-# 2012-06-06 14:09:10:527 [FLUSH] ("index_name")
+# 2012-06-06 14:44:23:782 [FLUSH] ("index_name")
 #
 curl -X PUT http://192.168.6.35:9400/index_name/_flush
 
-# 2012-06-06 14:09:10:527 [200]
+# 2012-06-06 14:44:23:782 [200]
 
 => true
 ```
@@ -215,13 +213,12 @@ curl -X PUT http://192.168.6.35:9400/index_name/_flush
 刷新索引：index.refresh
 
 ```
-index.refresh
-# 2012-06-06 14:10:13:356 [_refresh] ("index_name")
+[3] pry(main)> index.refresh
+# 2012-06-06 14:44:29:085 [REFRESH] ("index_name")
 #
-curl -X POST "http://192.168.6.35:9400/index_name/_refresh"
+curl -X PUT http://192.168.6.35:9400/index_name/_refresh
 
-# 2012-06-06 14:10:13:356 [200]
+# 2012-06-06 14:44:29:085 [200]
 
-=> 200 : {"ok":true,"acknowledged":true}
-
+=> true
 ```
