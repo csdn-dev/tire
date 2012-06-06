@@ -12,15 +12,6 @@ module Tire
       "#{Configuration.url}/#{@name}"
     end
 
-    def exists?
-      @response = Configuration.client.head("#{url}")
-      @response.success?
-
-    ensure
-      curl = %Q|curl -I "#{url}"|
-      logged('HEAD', curl)
-    end
-
     def regist_shard(total = 6)
       notes_count = Configuration.nodes_count
       regist_json = MultiJson.encode(build_regist_options(total, notes_count))
@@ -53,16 +44,6 @@ module Tire
     ensure
       curl = %Q|curl -X DELETE #{url}|
       logged('DELETE', curl)
-    end
-
-    def create(options={})
-      @options = options
-      @response = Configuration.client.post url, MultiJson.encode(options)
-      @response.success? ? @response : false
-
-    ensure
-      curl = %Q|curl -X POST #{url} -d '#{MultiJson.encode(options)}'|
-      logged('CREATE', curl)
     end
 
     # TODO wrap results
