@@ -55,27 +55,19 @@ curl -X DELETE http://192.168.6.35:9400/index_name
 创建Mapping:
 
 ```
-[1] pry(main)> options_str = '{"csdn" : {
-[1] pry(main)*          "_source" : { "enabled" : false },
-[1] pry(main)*          "properties" : {
-[1] pry(main)*              "title":           {"type" : "string","term_vector":"with_positions_offsets","boost":2.0},
-[1] pry(main)*              "body":            {"type" : "string","term_vector":"with_positions_offsets"},
-[1] pry(main)*              "username":        {"type" : "string","index":"not_analyzed","store":"no"},
-[1] pry(main)*              "id" :             {"type" : "integer","index":"not_analyzed","include_in_all":false},
-[1] pry(main)*              "created_at" :     {"type" : "integer","index":"not_analyzed","include_in_all":false}
-[1] pry(main)*          }}}'
-=> "{\"csdn\" : {\n         \"_source\" : { \"enabled\" : false },\n         \"properties\" : {\n             \"title\":           {\"type\" : \"string\",\"term_vector\":\"with_positions_offsets\",\"boost\":2.0},\n             \"body\":            {\"type\" : \"string\",\"term_vector\":\"with_positions_offsets\"},\n             \"username\":        {\"type\" : \"string\",\"index\":\"not_analyzed\",\"store\":\"no\"},\n             \"id\" :             {\"type\" : \"integer\",\"index\":\"not_analyzed\",\"include_in_all\":false},\n             \"created_at\" :     {\"type\" : \"integer\",\"index\":\"not_analyzed\",\"include_in_all\":false}\n         }}}"
-[2] pry(main)> options_json = '{"csdn" : {
-[2] pry(main)*          "_source" : { "enabled" : false },
-[2] pry(main)*          "properties" : {
-[2] pry(main)*              "title":           {"type" : "string","term_vector":"with_positions_offsets","boost":2.0},
-[2] pry(main)*              "body":            {"type" : "string","term_vector":"with_positions_offsets"},
-[2] pry(main)*              "username":        {"type" : "string","index":"not_analyzed","store":"no"},
-[2] pry(main)*              "id" :             {"type" : "integer","index":"not_analyzed","include_in_all":false},
-[2] pry(main)*              "created_at" :     {"type" : "integer","index":"not_analyzed","include_in_all":false}
-[2] pry(main)*          }}}'
-=> "{\"csdn\" : {\n         \"_source\" : { \"enabled\" : false },\n         \"properties\" : {\n             \"title\":           {\"type\" : \"string\",\"term_vector\":\"with_positions_offsets\",\"boost\":2.0},\n             \"body\":            {\"type\" : \"string\",\"term_vector\":\"with_positions_offsets\"},\n             \"username\":        {\"type\" : \"string\",\"index\":\"not_analyzed\",\"store\":\"no\"},\n             \"id\" :             {\"type\" : \"integer\",\"index\":\"not_analyzed\",\"include_in_all\":false},\n             \"created_at\" :     {\"type\" : \"integer\",\"index\":\"not_analyzed\",\"include_in_all\":false}\n         }}}"
-[3] pry(main)> options_hash = JSON.parse options_json
+[4] pry(main)> mapping = {"csdn"=>
+[4] pry(main)*   {"_source"=>{"enabled"=>false},
+[4] pry(main)*     "properties"=>
+[4] pry(main)*     {"title"=>
+[4] pry(main)*       {"type"=>"string",
+[4] pry(main)*         "term_vector"=>"with_positions_offsets",
+[4] pry(main)*       "boost"=>2.0},
+[4] pry(main)*       "body"=>{"type"=>"string", "term_vector"=>"with_positions_offsets"},
+[4] pry(main)*       "username"=>{"type"=>"string", "index"=>"not_analyzed", "store"=>"no"},
+[4] pry(main)*       "id"=>
+[4] pry(main)*       {"type"=>"integer", "index"=>"not_analyzed", "include_in_all"=>false},
+[4] pry(main)*       "created_at"=>
+[4] pry(main)* {"type"=>"integer", "index"=>"not_analyzed", "include_in_all"=>false}}}}
 => {"csdn"=>
   {"_source"=>{"enabled"=>false},
    "properties"=>
@@ -89,15 +81,12 @@ curl -X DELETE http://192.168.6.35:9400/index_name
       {"type"=>"integer", "index"=>"not_analyzed", "include_in_all"=>false},
      "created_at"=>
       {"type"=>"integer", "index"=>"not_analyzed", "include_in_all"=>false}}}}
-
-[5] pry(main)> index = Tire.index("index_name")
-=> #<Tire::Index:0xab7799c @name="index_name">
-[7] pry(main)> index.create_mapping("csdn", options_hash)
-# 2012-06-05 17:36:06:237 [CREATE MAPPING] ("index_name")
+[6] pry(main)> index.create_mapping("csdn", mapping)
+# 2012-06-06 13:22:25:504 [CREATE MAPPING] ("index_name")
 #
 curl -X PUT http://192.168.6.35:9400/index_name/csdn/_mapping -d '{"csdn":{"_source":{"enabled":false},"properties":{"title":{"type":"string","term_vector":"with_positions_offsets","boost":2.0},"body":{"type":"string","term_vector":"with_positions_offsets"},"username":{"type":"string","index":"not_analyzed","store":"no"},"id":{"type":"integer","index":"not_analyzed","include_in_all":false},"created_at":{"type":"integer","index":"not_analyzed","include_in_all":false}}}}'
 
-# 2012-06-05 17:36:06:237 [200]
+# 2012-06-06 13:22:25:505 [200]
 
 => true
 ```
@@ -125,4 +114,85 @@ index.mapping
       {"type"=>"integer", "index"=>"not_analyzed", "include_in_all"=>false}}}}
 [3] pry(main)>
 
+```
+
+批量提交索引数据：
+
+```
+[14] pry(main)> doc = <<-EOF
+[14] pry(main)* [
+[14] pry(main)*   {"title":"java 是好东西","body":"hey java","id":"1","username":"jack","created_at":2007072323},
+[14] pry(main)*   {"title":"this java cool","body":"hey java","id":"2","created_at":2009072323,"username":"robbin"},
+[14] pry(main)*   {"title":"this is java cool","body":"hey java","id":"3","created_at":2010072323,"username":"www"},
+[14] pry(main)*   {"title":"java is really cool","body":"hey java","id":"4","created_at":2007062323,"username":"google"},
+[14] pry(main)*   {"title":"this is wakak cool","body":"hey java","id":"5","created_at":2007062323,"username":"jackde"},
+[14] pry(main)*   {"title":"this is java cool","body":"hey java","id":"6","created_at":2007012323,"username":"jackk wa"},
+[14] pry(main)*   {"title":"this java really cool","body":"hey java","id":"7","created_at":2002072323,"username":"william"}
+[14] pry(main)* ]
+[14] pry(main)* EOF
+=> "[\n  {\"title\":\"java 是好东西\",\"body\":\"hey java\",\"id\":\"1\",\"username\":\"jack\",\"created_at\":2007072323},\n  {\"title\":\"this java cool\",\"body\":\"hey java\",\"id\":\"2\",\"created_at\":2009072323,\"username\":\"robbin\"},\n  {\"title\":\"this is java cool\",\"body\":\"hey java\",\"id\":\"3\",\"created_at\":2010072323,\"username\":\"www\"},\n  {\"title\":\"java is really cool\",\"body\":\"hey java\",\"id\":\"4\",\"created_at\":2007062323,\"username\":\"google\"},\n  {\"title\":\"this is wakak cool\",\"body\":\"hey java\",\"id\":\"5\",\"created_at\":2007062323,\"username\":\"jackde\"},\n  {\"title\":\"this is java cool\",\"body\":\"hey java\",\"id\":\"6\",\"created_at\":2007012323,\"username\":\"jackk wa\"},\n  {\"title\":\"this java really cool\",\"body\":\"hey java\",\"id\":\"7\",\"created_at\":2002072323,\"username\":\"william\"}\n]\n"
+[15] pry(main)> hash_doc = JSON.parse doc
+=> [{"title"=>"java 是好东西",
+  "body"=>"hey java",
+  "id"=>"1",
+  "username"=>"jack",
+  "created_at"=>2007072323},
+ {"title"=>"this java cool",
+  "body"=>"hey java",
+  "id"=>"2",
+  "created_at"=>2009072323,
+  "username"=>"robbin"},
+ {"title"=>"this is java cool",
+  "body"=>"hey java",
+  "id"=>"3",
+  "created_at"=>2010072323,
+  "username"=>"www"},
+ {"title"=>"java is really cool",
+  "body"=>"hey java",
+  "id"=>"4",
+  "created_at"=>2007062323,
+  "username"=>"google"},
+ {"title"=>"this is wakak cool",
+  "body"=>"hey java",
+  "id"=>"5",
+  "created_at"=>2007062323,
+  "username"=>"jackde"},
+ {"title"=>"this is java cool",
+  "body"=>"hey java",
+  "id"=>"6",
+  "created_at"=>2007012323,
+  "username"=>"jackk wa"},
+ {"title"=>"this java really cool",
+  "body"=>"hey java",
+  "id"=>"7",
+  "created_at"=>2002072323,
+  "username"=>"william"}]
+[16] pry(main)> index
+=> #<Tire::Index:0xa809bd4
+ @name="index_name",
+ @options=
+  {"csdn"=>
+    {"_source"=>{"enabled"=>false},
+     "properties"=>
+      {"title"=>
+        {"type"=>"string",
+         "term_vector"=>"with_positions_offsets",
+         "boost"=>2.0},
+       "body"=>{"type"=>"string", "term_vector"=>"with_positions_offsets"},
+       "username"=>{"type"=>"string", "index"=>"not_analyzed", "store"=>"no"},
+       "id"=>
+        {"type"=>"integer", "index"=>"not_analyzed", "include_in_all"=>false},
+       "created_at"=>
+        {"type"=>"integer",
+         "index"=>"not_analyzed",
+         "include_in_all"=>false}}}},
+ @response=200 : {"ok":true,"acknowledged":true}>
+[17] pry(main)> index.bulk("csdn", hash_doc)
+# 2012-06-06 13:35:54:133 [BULK] ("index_name")
+#
+curl -X PUT http://192.168.6.35:9400/index_name/csdn/_pulk -d '[{"title":"java 是好东西","body":"hey java","id":"1","username":"jack","created_at":2007072323},{"title":"this java cool","body":"hey java","id":"2","created_at":2009072323,"username":"robbin"},{"title":"this is java cool","body":"hey java","id":"3","created_at":2010072323,"username":"www"},{"title":"java is really cool","body":"hey java","id":"4","created_at":2007062323,"username":"google"},{"title":"this is wakak cool","body":"hey java","id":"5","created_at":2007062323,"username":"jackde"},{"title":"this is java cool","body":"hey java","id":"6","created_at":2007012323,"username":"jackk wa"},{"title":"this java really cool","body":"hey java","id":"7","created_at":2002072323,"username":"william"}]'
+
+# 2012-06-06 13:35:54:133 [200]
+
+=> true
 ```

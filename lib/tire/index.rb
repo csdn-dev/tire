@@ -42,7 +42,7 @@ module Tire
       
       MultiJson.decode(@response.body)
     ensure
-      curl = %Q|curl -X GET #{url}|
+      curl = %Q|curl -X GET #{url}/_shard|
       logged('_regist_shard_info', curl)
     end
 
@@ -65,6 +65,7 @@ module Tire
       logged('CREATE', curl)
     end
 
+    # TODO wrap results
     def mapping(type)
       @response = Configuration.client.get("#{url}/#{type}/_mapping")
       MultiJson.decode(@response.body)
@@ -78,6 +79,15 @@ module Tire
     ensure
       curl = %Q|curl -X PUT #{url}/#{type}/_mapping -d '#{MultiJson.encode(options)}'|
       logged('CREATE MAPPING', curl)
+    end
+
+    def bulk(type, document)
+      @response = Configuration.client.put("#{url}/#{type}/_bulk", MultiJson.encode(document))
+      @response.success?
+
+    ensure
+      curl = %Q|curl -X PUT #{url}/#{type}/_pulk -d '#{MultiJson.encode(document)}'|
+      logged('BULK', curl)
     end
 
     def settings
