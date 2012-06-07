@@ -4,7 +4,7 @@ module Tire
 
     class Search
 
-      attr_reader :indices, :json, :query, :facets, :filters, :options, :explain
+      attr_reader :indices, :json, :query, :filters, :options
 
       def initialize(indices=nil, options={}, &block)
         @indices = Array(indices)
@@ -43,12 +43,6 @@ module Tire
         self
       end
 
-      def facet(name, options={}, &block)
-        @facets ||= {}
-        @facets.update Facet.new(name, options, &block).to_hash
-        self
-      end
-
       def filter(type, *options)
         @filters ||= []
         @filters << Filter.new(type, *options).to_hash
@@ -73,16 +67,6 @@ module Tire
       def size(value)
         @size = value
         @options[:size] = value
-        self
-      end
-
-      def fields(*fields)
-        @fields = Array(fields.flatten)
-        self
-      end
-
-      def explain(value)
-        @explain = value
         self
       end
 
@@ -112,15 +96,12 @@ module Tire
           request = {}
           request.update( { :query  => @query.to_hash } )    if @query
           request.update( { :sort   => @sort.to_ary   } )    if @sort
-          request.update( { :facets => @facets.to_hash } )   if @facets
           request.update( { :filter => @filters.first.to_hash } ) if @filters && @filters.size == 1
           request.update( { :filter => { :and => @filters.map {|filter| filter.to_hash} } } ) if  @filters && @filters.size > 1
           request.update( { :highlight => @highlight.to_hash } ) if @highlight
           request.update( { :size => @size } )               if @size
           request.update( { :from => @from } )               if @from
-          request.update( { :fields => @fields } )           if @fields
           request.update( { :version => @version } )         if @version
-          request.update( { :explain => @explain } )         if @explain
           request
         end
       end

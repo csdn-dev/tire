@@ -12,51 +12,24 @@ module Tire
         @value = { :term => query }
       end
 
-      def terms(field, value, options={})
-        @value = { :terms => { field => value } }
-        @value[:terms].update( { :minimum_match => options[:minimum_match] } ) if options[:minimum_match]
-        @value
-      end
-
       def range(field, value)
         @value = { :range => { field => value } }
       end
 
-      def text(field, value, options={})
-        query_options = { :query => value }.update(options)
-        @value = { :text => { field => query_options } }
+      def text(field, value)
+        @value = { :text => { field => value } }
         @value
       end
 
-      def string(value, options={})
-        @value = { :query_string => { :query => value } }
-        @value[:query_string].update(options)
-        @value
-      end
-
-      def custom_score(options={}, &block)
-        @custom_score ||= Query.new(&block)
-        @value[:custom_score] = options
-        @value[:custom_score].update({:query => @custom_score.to_hash})
-        @value
-      end
-
-      def fuzzy(field, value, options={})
+      def wild(field, value, options={})
         query = { field => { :term => value }.update(options) }
-        @value = { :fuzzy => query }
+        @value = { :wildcard => query }
       end
 
       def boolean(options={}, &block)
         @boolean ||= BooleanQuery.new(options)
         block.arity < 1 ? @boolean.instance_eval(&block) : block.call(@boolean) if block_given?
         @value[:bool] = @boolean.to_hash
-        @value
-      end
-
-      def filtered(&block)
-        @filtered = FilteredQuery.new
-        block.arity < 1 ? @filtered.instance_eval(&block) : block.call(@filtered) if block_given?
-        @value[:filtered] = @filtered.to_hash
         @value
       end
 
