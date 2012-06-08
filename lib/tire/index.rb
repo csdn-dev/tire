@@ -3,9 +3,8 @@ module Tire
 
     attr_reader :name, :response
 
-    def initialize(name, &block)
+    def initialize(name)
       @name = name
-      block.arity < 1 ? instance_eval(&block) : block.call(self) if block_given?
     end
 
     def url
@@ -47,7 +46,7 @@ module Tire
     end
 
     # TODO wrap results
-    def mapping(type)
+    def mapping(type = "csdn")
       @response = Configuration.client.get("#{url}/#{type}/_mapping")
       MultiJson.decode(@response.body)
     end

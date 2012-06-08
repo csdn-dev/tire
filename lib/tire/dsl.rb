@@ -4,21 +4,13 @@ module Tire
     def configure(&block)
       Configuration.class_eval(&block)
     end
-
-    def search(indices=nil, options={}, &block)
-      if block_given?
-        Search::Search.new(indices, options, &block)
-      else
-        Search::Search.new(indices, :payload => options)
-      end
-    rescue Exception => error
-      STDERR.puts "[REQUEST FAILED] #{error.class} #{error.message rescue nil}\n"
-      raise
-    ensure
+    
+    def index(name)
+      Index.new(name)
     end
 
-    def index(name, &block)
-      Index.new(name, &block)
+    def search(names, types, payload)
+      Search.new(names, types, payload)
     end
 
   end
