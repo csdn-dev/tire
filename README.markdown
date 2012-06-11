@@ -1,6 +1,6 @@
 Tire
 =========
-Ruby client for ElasticSearch.
+Ruby client for CSDNSearch.
 
 Usage
 -----
@@ -285,10 +285,19 @@ curl -X GET http://192.168.6.35:9400/bbs/csdn/_count -d '{"query":{"text":{"titl
 6
 ```
 
+
 博客搜索:
 ```
 options = {:search_type => 'blog', :keyword => 'java'}
 search = Tire::GeneralSearch::Search.new(options)
 #search.results #待实现
 search.search_engine.perform #输出测试
+```
+
+集群状态：
+
+```
+state = Tire.state.info
+
+more_state = Tire.state.info(true)
 ```

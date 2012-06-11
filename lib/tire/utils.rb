@@ -12,6 +12,28 @@ module Tire
       URI.decode_www_form_component(s)
     end
 
-    extend self
+    def logged(endpoint='/', curl='')
+      if Configuration.logger
+        error = $!
+
+        Configuration.logger.log_request endpoint, @name, curl
+
+        code = @response ? @response.code : error.class rescue 200
+
+        if Configuration.logger.level.to_s == 'debug'
+          body = if @response
+            defined?(Yajl) ? Yajl::Encoder.encode(@response.body, :pretty => true) : MultiJson.encode(@response.body)
+          else
+            error.message rescue ''
+          end
+        else
+          body = ''
+        end
+
+        Configuration.logger.log_response code, nil, body
+      end
+    end
+
+    module_function :escape, :unescape
   end
 end

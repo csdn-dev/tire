@@ -17,5 +17,9 @@ module Tire
       Count.new(names, types, payload)
     end
 
+    def state
+      State.new
+    end
+
   end
 end

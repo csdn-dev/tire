@@ -72,3 +72,9 @@ p search.results
 
 count = Tire.count("bbs", "csdn", '{"query":{"text":{"title":"java"}},"size":10,"from":0}')
 p count.results
+
+state = Tire.state.info
+p state
+
+more_state = Tire.state.info(true)
+p more_state
