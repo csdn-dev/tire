@@ -14,10 +14,6 @@ module Tire
       @client = klass || @client || HTTP::Client::RestClient
     end
 
-    def self.wrapper(klass=nil)
-      @wrapper = klass || @wrapper || Results::Item
-    end
-
     def self.logger(device=nil, options={})
       return @logger = Logger.new(device, options) if device
       @logger || nil

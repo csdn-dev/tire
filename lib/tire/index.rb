@@ -22,7 +22,6 @@ module Tire
       logged('_regist_shard', curl)
     end
 
-    # TODO wrap results
     def shard_info
       @response = Configuration.client.get("#{url}/_shard")
       if @response.failure?
@@ -45,7 +44,6 @@ module Tire
       logged('DELETE', curl)
     end
 
-    # TODO wrap results
     def mapping(type = "csdn")
       @response = Configuration.client.get("#{url}/#{type}/_mapping")
       MultiJson.decode(@response.body)

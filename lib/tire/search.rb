@@ -36,14 +36,13 @@ module Tire
         raise SearchRequestFailed, @response.to_s
       end
       @json     = MultiJson.decode(@response.body)
-      @results  = Results::Collection.new(@json, @options)
-      return self
+      return @json
     ensure
       logged
     end
 
     def to_curl
-      %Q|curl -X GET "#{url} -d '#{payload}'|
+      %Q|curl -X GET #{url} -d '#{payload}'|
     end
 
     def payload
@@ -59,7 +58,6 @@ module Tire
 
         Configuration.logger.log_request '_search', indices, to_curl
 
-        took = @json['took']  rescue nil
         code = @response.code rescue nil
 
         if Configuration.logger.level.to_s == 'debug'
@@ -73,7 +71,7 @@ module Tire
           body = ''
         end
 
-        Configuration.logger.log_response code || 'N/A', took || 'N/A', body || 'N/A'
+        Configuration.logger.log_response code || 'N/A', "N/A", body || 'N/A'
       end
     end
 
