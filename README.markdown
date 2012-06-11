@@ -5,6 +5,27 @@ Ruby client for ElasticSearch.
 Usage
 -----
 
+配置：
+
+```
+# 设置搜索后端节点数量：
+Tire::Configuration.nodes_count(2)
+```
+
+```
+# 设置日志：
+Tire::Configuration.logger(STDOUT, :level => "debug")
+```
+
+```
+# 设置搜索后端URL
+Tire::Configuration.url("http://localhost:9200")
+```
+或者在环境变量设置：
+```
+export ELASTICSEARCH_URL=http://localhost:9200
+```
+
 注册分片：index.regist_shard(total)
 ```
 [1] pry(main)> index = Tire.index("index_name")
@@ -221,4 +242,22 @@ curl -X PUT http://192.168.6.35:9400/index_name/_refresh
 # 2012-06-06 14:44:29:085 [200]
 
 => true
+```
+
+搜索：Tire.search(index, type, payload)
+
+```
+search = Tire.search("bbs", "csdn", '{"query":{"text":{"title":"java"}},"size":10,"from":0}')
+=> #<Tire::Search:0xb34e5328
+ @indices=["bbs"],
+ @path="/bbs/csdn/_search",
+ @payload="{\"query\":{\"text\":{\"title\":\"java\"}},\"size\":10,\"from\":0}",
+ @types=["csdn"]>
+[28] pry(main)> search.results
+# 2012-06-11 14:34:37:%L [_search] (["bbs"])
+#
+curl -X GET http://192.168.6.35:9400/bbs/csdn/_search -d '{"query":{"text":{"title":"java"}},"size":10,"from":0}'
+
+# 2012-06-11 14:34:37:%L [200] (N/A msec)
+
 ```
