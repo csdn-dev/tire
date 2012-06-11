@@ -18,7 +18,7 @@ module Tire
     end
 
     def results
-      @results  || (perform; @results)
+      @json  || (perform; @json)
     end
 
     def response

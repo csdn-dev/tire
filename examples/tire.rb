@@ -69,3 +69,6 @@ index.refresh
 
 search = Tire.search("bbs", "csdn", '{"query":{"text":{"title":"java"}},"size":10,"from":0}')
 p search.results
+
+count = Tire.count("bbs", "csdn", '{"query":{"text":{"title":"java"}},"size":10,"from":0}')
+p count.results

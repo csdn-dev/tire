@@ -13,5 +13,9 @@ module Tire
       Search.new(names, types, payload)
     end
 
+    def count(names, types, payload)
+      Count.new(names, types, payload)
+    end
+
   end
 end

@@ -59,7 +59,7 @@ curl -X GET http://192.168.6.35:9400/index_name
 
 ```
 
-删除索引(后端未实现)：index.delete
+删除索引：index.delete
 
 ```
 [5] pry(main)> index.delete
@@ -260,4 +260,27 @@ curl -X GET http://192.168.6.35:9400/bbs/csdn/_search -d '{"query":{"text":{"tit
 
 # 2012-06-11 14:34:37:%L [200] (N/A msec)
 
+```
+
+统计：
+
+```
+count = Tire.count("bbs", "csdn", '{"query":{"text":{"title":"java"}},"size":10,"from":0}')
+=> #<Tire::Count:0xb34b2860
+ @indices=["bbs"],
+ @path="/bbs/csdn/_count",
+ @payload="{\"query\":{\"text\":{\"title\":\"java\"}},\"size\":10,\"from\":0}",
+ @types=["csdn"]>
+[27] pry(main)> p count.results
+# 2012-06-11 15:41:05:%L [_search] (["bbs"])
+#
+curl -X GET http://192.168.6.35:9400/bbs/csdn/_count -d '{"query":{"text":{"title":"java"}},"size":10,"from":0}'
+
+# 2012-06-11 15:41:05:%L [200] (N/A msec)
+#
+# {
+#   "totalHits": 6
+# }
+
+6
 ```
