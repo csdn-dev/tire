@@ -30,7 +30,7 @@ class Test::Unit::TestCase
 end
 
 module Test::Integration
-  URL = "http://localhost:9200"
+  URL = "http://192.168.6.35:9400"
 
   def setup
     begin; Object.send(:remove_const, :Rails); rescue; end
