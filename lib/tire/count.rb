@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 module Tire
   class SearchRequestFailed < StandardError; end
 

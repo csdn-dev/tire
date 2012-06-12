@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 index = Tire.index("bbs")
 index.delete
 index.regist_shard(6)

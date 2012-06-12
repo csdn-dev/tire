@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 require 'test_helper'
 
 module Tire
@@ -61,7 +62,6 @@ module Tire
 
       should "allow to reset the configuration for all properties" do
         Configuration.url     'http://example.com'
-        Configuration.wrapper Hash
         assert_equal          'http://example.com', Configuration.url
         Configuration.reset
         assert_equal          'http://localhost:9200', Configuration.url

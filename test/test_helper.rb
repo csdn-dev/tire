@@ -1,14 +1,14 @@
+# -*- encoding : utf-8 -*-
 require 'rubygems'
 require 'bundler/setup'
 
-require 'pathname'
 require 'test/unit'
 
 require 'yajl'
 #require 'yajl/json_gem'
 
 require 'shoulda'
-require 'turn/autorun' unless ENV["TM_FILEPATH"] || ENV["CI"] || defined?(RUBY_VERSION) && RUBY_VERSION < '1.9'
+require 'turn/autorun' unless  defined?(RUBY_VERSION) && RUBY_VERSION < '1.9'
 require 'mocha'
 
 require 'tire'
@@ -19,46 +19,31 @@ class Test::Unit::TestCase
     Tire::HTTP::Response.new(body, code, headers)
   end
 
-  def fixtures_path
-    Pathname( File.expand_path( 'fixtures', File.dirname(__FILE__) ) )
-  end
-
-  def fixture_file(path)
-    File.read File.expand_path( path, fixtures_path )
-  end
-
 end
 
 module Test::Integration
   URL = "http://192.168.6.35:9400"
+  INDEX = "articles_test"
 
   def setup
-    begin; Object.send(:remove_const, :Rails); rescue; end
+    ENV['ELASTICSEARCH_URL'] = URL
+    @index = Tire.index(INDEX)
+  end
 
-    begin
-      ::RestClient.get URL
-    rescue Errno::ECONNREFUSED
-      abort "\n\n#{'-'*87}\n[ABORTED] You have to run ElasticSearch on #{URL} for integration tests\n#{'-'*87}\n\n"
-    end
+  def regist_shard
+    @index.delete
+    @index.regist_shard(6)
+  end
 
-    ::RestClient.delete "#{URL}/articles-test"     rescue nil
-    ::RestClient.post   "#{URL}/articles-test", ''
-    fixtures_path.join('articles').entries.each do |f|
-      filename = f.to_s
-      next if filename =~ /^\./
-      ::RestClient.put "#{URL}/articles-test/article/#{File.basename(filename, '.*')}",
-                       fixtures_path.join('articles').join(f).read
-    end
-    ::RestClient.post "#{URL}/articles-test/_refresh", ''
+  def create_mapping
 
-    Dir[File.dirname(__FILE__) + '/models/**/*.rb'].each { |m| load m }
+  end
+
+  def bulk_data
+    
   end
 
   def teardown
-    %w[
-      articles-test
-      dynamic_index ].each do |index|
-        ::RestClient.delete "#{URL}/#{index}" rescue nil
-    end
+    ::RestClient.delete "#{URL}/#{INDEX}" rescue nil
   end
 end
