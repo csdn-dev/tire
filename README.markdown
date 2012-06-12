@@ -282,18 +282,6 @@ curl -X GET http://192.168.6.35:9400/bbs/csdn/_count -d '{"query":{"text":{"titl
 #   "totalHits": 6
 # }
 
-6
-```
-
-
-博客搜索:
-```
-options = {:search_type => 'blog', :keyword => 'java'}
-search = Tire::GeneralSearch::Search.new(options)
-#search.results #待实现
-search.search_engine.perform #输出测试
-```
-
 集群状态：
 
 ```
