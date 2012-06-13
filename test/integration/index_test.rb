@@ -27,6 +27,30 @@ module Tire
         assert !@index.shard_info.empty?
       end
 
+      should "create mapping" do
+        assert setup_mapping
+      end
+
+      should "get mapping info" do
+        setup_mapping
+        assert_kind_of Hash, @index.mapping(TYPE)
+        assert_not_nil @index.mapping(TYPE)[TYPE]
+      end
+
+      should "bulk insert" do
+        assert setup_bulk
+      end
+
+      should "flush index" do
+        setup_bulk
+        assert @index.flush
+      end
+
+      should "refresh index" do
+        setup_bulk
+        assert @index.refresh
+      end
+
     end
 
   end
