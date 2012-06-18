@@ -79,3 +79,5 @@ p state
 
 more_state = Tire.state.info(true)
 p more_state
+
+Tire::ClickLog.new('blog', 'csdn', 'java', '1').log
