@@ -3,13 +3,13 @@ $:.unshift File.expand_path("../lib", __FILE__)
 require "tire/version"
 
 Gem::Specification.new do |s|
-  s.name        = "tire"
+  s.name        = "csdn-tire"
   s.version     = Tire::VERSION
   s.platform    = Gem::Platform::RUBY
-  s.summary     = "Ruby client for ElasticSearch"
-  s.homepage    = "http://github.com/karmi/tire"
-  s.authors     = [ 'Karel Minarik' ]
-  s.email       = 'karmi@karmi.cz'
+  s.summary     = "Ruby client for CSDNSearch"
+  s.homepage    = "https://github.com/csdn-dev/tire"
+  s.authors     = [ 'Hooopo' ]
+  s.email       = 'wangxz@csdn.net'
 
   s.rubyforge_project = "tire"
 
@@ -42,39 +42,8 @@ Gem::Specification.new do |s|
   s.add_development_dependency "curb"
   s.add_development_dependency "minitest"
 
-  # These gems are not needed for CI at <http://travis-ci.org/#!/karmi/tire>
-  #
-  unless ENV["CI"]
-    s.add_development_dependency "rdoc"
-    s.add_development_dependency "turn", "~> 0.9" if defined?(RUBY_VERSION) && RUBY_VERSION > '1.9'
-  end
 
   s.description = <<-DESC
-   Tire is a Ruby client for the ElasticSearch search engine/database.
-
-   It provides Ruby-like API for fluent communication with the ElasticSearch server
-   and blends with ActiveModel class for convenient usage in Rails applications.
-
-   It allows to delete and create indices, define mapping for them, supports
-   the bulk API, and presents an easy-to-use DSL for constructing your queries.
-
-   It has full ActiveRecord/ActiveModel compatibility, allowing you to index
-   your models (incrementally upon saving, or in bulk), searching and
-   paginating the results.
-
-   Please check the documentation at <http://karmi.github.com/tire/>.
+   Tire is a Ruby client for the CSDNSearch search engine/database.
   DESC
-
-  s.post_install_message =<<-CHANGELOG.gsub(/^  /, '')
-  ================================================================================
-
-    Please check the documentation at <http://karmi.github.com/tire/>.
-
-  --------------------------------------------------------------------------------
-
-#{Tire::CHANGELOG}
-    See the full changelog at <http://github.com/karmi/tire/commits/v#{Tire::VERSION}>.
-
-  --------------------------------------------------------------------------------
-  CHANGELOG
 end

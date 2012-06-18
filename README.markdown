@@ -281,7 +281,7 @@ curl -X GET http://192.168.6.35:9400/bbs/csdn/_count -d '{"query":{"text":{"titl
 # {
 #   "totalHits": 6
 # }
-
+```
 集群状态：
 
 ```
