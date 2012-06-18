@@ -17,7 +17,6 @@ require 'tire/http/client'
 require 'tire/search'
 require 'tire/count'
 require 'tire/state'
-require 'tire/results/pagination'
 require 'tire/index'
 require 'tire/dsl'
 
