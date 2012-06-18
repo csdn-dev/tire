@@ -51,6 +51,11 @@ module Tire
         assert @index.refresh
       end
 
+      should "get index list" do
+        @list = Tire::Index.list
+        assert_kind_of Array, @list
+      end
+
     end
 
   end
