@@ -10,13 +10,21 @@ module Tire
       should "search results" do
         setup_bulk
         @index.refresh
-        search = Tire.search(INDEX, TYPE, '{"query":{"text":{"title":"java"}},"size":4,"from":0}')
+
+        max_size = 4
+        query = "java"
+
+        search = Tire.search(INDEX, TYPE, %Q!{"query":{"text":{"title":"#{query}"}},"size":#{max_size},"from":0}!)
+
         results = search.results
         assert_kind_of Hash, results
         assert results["total"] > 0
         assert_kind_of Array, results["hits"]
-        assert_equal 6, results["total"]
-        assert_equal 4, results["hits"].size
+
+        hits_count = DOC.select{|item| item["title"] =~ /#{query}/}.size
+
+        assert_equal hits_count, results["total"]
+        assert_equal max_size, results["hits"].size
       end
     end
   end

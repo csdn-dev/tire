@@ -2,27 +2,11 @@
 module Tire
   class Index
     include Utils
-    extend Utils
     
     attr_reader :name, :response
 
     def initialize(name)
       @name = name
-    end
-
-    def self.list
-      url = "#{Configuration.url}/cluster/_index"
-
-      @response = Configuration.client.get(url)
-      if @response.failure?
-        STDERR.puts "[REQUEST FAILED] \n"
-        raise @response.to_s
-      end
-
-      MultiJson.decode(@response.body)
-    ensure
-      curl = %Q|curl -X GET #{url}|
-      logged('Index list', curl)
     end
 
     def url
