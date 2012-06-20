@@ -7,7 +7,7 @@ module Tire
 
     def teardown
       Tire::Configuration.reset
-      ENV['ELASTICSEARCH_URL'] = nil
+      ENV['CSDNSEARCH_URL'] = nil
     end
 
     context "Configuration" do
@@ -25,7 +25,7 @@ module Tire
       end
 
       should "use environment variable, if present" do
-        ENV['ELASTICSEARCH_URL'] = 'http://es.example.com'
+        ENV['CSDNSEARCH_URL'] = 'http://es.example.com'
         assert_equal 'http://es.example.com', Configuration.url
       end
 

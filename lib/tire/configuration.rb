@@ -8,7 +8,7 @@ module Tire
     end
 
     def self.url(value=nil)
-      @url = (value ? value.to_s.gsub(%r|/*$|, '') : nil) || @url || ENV['ELASTICSEARCH_URL'] || "http://localhost:9200"
+      @url = (value ? value.to_s.gsub(%r|/*$|, '') : nil) || @url || ENV['CSDNSEARCH_URL'] || "http://localhost:9200"
     end
 
     def self.client(klass=nil)

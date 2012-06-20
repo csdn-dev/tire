@@ -11,7 +11,7 @@ module Tire
     end
 
     def self.list
-      url = "#{Configuration.url}/index"
+      url = "#{Configuration.url}/cluster/_index"
 
       @response = Configuration.client.get(url)
       if @response.failure?

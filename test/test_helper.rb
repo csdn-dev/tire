@@ -8,7 +8,6 @@ require 'yajl'
 #require 'yajl/json_gem'
 
 require 'shoulda'
-require 'turn/autorun' unless  defined?(RUBY_VERSION) && RUBY_VERSION < '1.9'
 require 'mocha'
 
 require 'tire'
@@ -27,7 +26,7 @@ module Test::Integration
   TYPE = "type_test"
 
   def setup
-    ENV['ELASTICSEARCH_URL'] = URL
+    Tire::Configuration.url(URL)
     @index = Tire.index(INDEX)
   end
 
