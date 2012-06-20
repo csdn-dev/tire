@@ -14,6 +14,9 @@ module Tire
       end
 
       @path    = ['/', @indices.join(','), @types.join(','), '_count'].compact.join('/').squeeze('/')
+      if indices == 'blog'
+        @path += '?preference=_local'
+      end
     end
 
     def results
