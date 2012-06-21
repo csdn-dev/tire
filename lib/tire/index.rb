@@ -13,9 +13,8 @@ module Tire
       "#{Configuration.url}/#{@name}"
     end
 
-    def regist_shard(total = 6)
-      notes_count = Configuration.nodes_count
-      regist_json = MultiJson.encode(build_regist_options(total, notes_count))
+    def regist_shard(options)
+      regist_json = MultiJson.encode(options)
       @response = Configuration.client.put("#{url}/_shard", regist_json)
       @response.success?
 
@@ -86,12 +85,6 @@ module Tire
     ensure
       curl = %Q|curl -X PUT #{url}/_refresh|
       logged('REFRESH', curl)
-    end
-
-    private
-
-    def build_regist_options(total, notes_count)
-      Hash[(0..total - 1).group_by{|x| x.modulo notes_count}.map{|key, value| ["cs#{key + 1}", value]}]
     end
 
   end

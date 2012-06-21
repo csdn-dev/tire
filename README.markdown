@@ -8,11 +8,6 @@ Usage
 配置：
 
 ```
-# 设置搜索后端节点数量：
-Tire::Configuration.nodes_count(2)
-```
-
-```
 # 设置日志：
 Tire::Configuration.logger(STDOUT, :level => "debug")
 ```
@@ -23,22 +18,23 @@ Tire::Configuration.url("http://localhost:9200")
 ```
 或者在环境变量设置：
 ```
-export ELASTICSEARCH_URL=http://localhost:9200
+export CSDNSEARCH_URL=http://localhost:9200
 ```
 
-注册分片：index.regist_shard(total)
+注册分片：index.regist_shard(options)
 ```
 [1] pry(main)> index = Tire.index("index_name")
-=> #<Tire::Index:0x9cd1564 @name="index_name">
-[2] pry(main)> index.regist_shard(6)
-# 2012-06-05 16:23:44:053 [_regist_shard] ("index_name")
+=> #<Tire::Index:0xb2b3b958 @name="index_name">
+[2] pry(main)> index.regist_shard :cs1 => [0,1], :cs2 => [2]
+# 2012-06-21 17:47:34:%L [_regist_shard] ("index_name")
 #
-curl -X PUT "http://192.168.6.35:9400/index_name/_shard" -d '{"cs1":[0,2,4],"cs2":[1,3,5]}'
+curl -X PUT "http://192.168.6.35:9400/index_name/_shard" -d '{"cs2":[2],"cs1":[0,1]}'
 
-# 2012-06-05 16:23:44:053 [200]
+# 2012-06-21 17:47:34:%L [200]
+#
+# "{\"ok\":true,\"acknowledged\":\"true\"}"
 
 => true
-[3] pry(main)> 
 ```
 
 查看分片信息：index.shard_info
