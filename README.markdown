@@ -282,10 +282,20 @@ curl -X GET http://192.168.6.35:9400/bbs/csdn/_count -d '{"query":{"text":{"titl
 #   "totalHits": 6
 # }
 ```
+
 集群状态：
-
 ```
-state = Tire.state.info
-
-more_state = Tire.state.info(true)
+Tire::Cluster.state
+Tire::Cluster.state(true)
 ```
+
+索引列表：
+```
+Tire::Cluster.index
+```
+
+主机信息：
+```
+Tire::Cluster.host
+```
+
