@@ -21,6 +21,10 @@ module Tire
       reset_variables.each { |v| instance_variable_set(v.to_sym, nil) }
     end
 
+    def self.timeout_sec(value=nil)
+      @timeout_sec = value || @timeout_sec || 10
+    end
+
   end
 
 end

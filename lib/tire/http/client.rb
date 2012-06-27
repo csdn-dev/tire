@@ -1,9 +1,11 @@
 # -*- encoding : utf-8 -*-
+require 'timeout'
 module Tire
 
   module HTTP
 
     module Client
+      class RequestTimeout < Timeout::Error ; end
 
       class RestClient
         ConnectionExceptions = [::RestClient::ServerBrokeConnection, ::RestClient::RequestTimeout]
@@ -51,7 +53,9 @@ module Tire
         private
 
         def self.perform(response)
-          Response.new response.body, response.code, response.headers
+          timeout(Configuration.timeout_sec, RequestTimeout) do
+            Response.new response.body, response.code, response.headers
+          end
         end
 
       end
