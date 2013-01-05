@@ -39,7 +39,6 @@ Gem::Specification.new do |s|
   s.add_development_dependency "shoulda"
   s.add_development_dependency "mocha"
   s.add_development_dependency "bson_ext"
-  s.add_development_dependency "curb"
   s.add_development_dependency "minitest"
 
 
