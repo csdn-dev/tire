@@ -21,7 +21,8 @@ class Test::Unit::TestCase
 end
 
 module Test::Integration
-  URL = "http://192.168.6.35:9400"
+  URL = "http://192.168.4.84:9400"
+  TOKEN = "testtoken"
   INDEX = "articles_test"
   TYPE = "type_test"
   DOC =  [
@@ -80,6 +81,7 @@ module Test::Integration
 
   def setup
     Tire::Configuration.url(URL)
+    Tire::Configuration.x_acl_token(TOKEN)
     @index = Tire.index(INDEX)
   end
 

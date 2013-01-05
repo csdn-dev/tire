@@ -25,6 +25,10 @@ module Tire
       @timeout_sec = value || @timeout_sec || 10
     end
 
+    def self.x_acl_token(value=nil)
+      @x_acl_token = value || @x_acl_token || raise(ArgumentError, "must init X ACL Token")
+    end
+
   end
 
 end
